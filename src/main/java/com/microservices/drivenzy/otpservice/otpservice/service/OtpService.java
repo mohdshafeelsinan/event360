@@ -25,7 +25,7 @@ public class OtpService {
 	@Autowired
 	private SequenceGeneratorService seqService;
 	
-	@Autowired SmsService smsService;
+//	@Autowired SmsService smsService;
 	
 	public VerifyResponse getVerifyResponse(VerifyRequest request)
 	{
@@ -74,7 +74,7 @@ public class OtpService {
 	    	
 	    	try {
 	    		//request.getMobileno()
-				String ssId = smsService.sendSms("7907205726", otp);
+//				String ssId = smsService.sendSms("7907205726", otp);
 			} catch (Exception e) {
 				System.err.println("sms error");
 			}
