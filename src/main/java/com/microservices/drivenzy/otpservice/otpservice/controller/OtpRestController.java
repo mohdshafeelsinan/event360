@@ -3,11 +3,7 @@ package com.microservices.drivenzy.otpservice.otpservice.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.microservices.drivenzy.otpservice.otpservice.dto.RequestDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.ResponseDto;
@@ -15,8 +11,9 @@ import com.microservices.drivenzy.otpservice.otpservice.dto.VerifyRequest;
 import com.microservices.drivenzy.otpservice.otpservice.dto.VerifyResponse;
 import com.microservices.drivenzy.otpservice.otpservice.service.OtpService;
 
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/bfl/")
+@RequestMapping("/event/")
 public class OtpRestController {
 	
 	@Autowired
@@ -51,6 +48,30 @@ public class OtpRestController {
 			response.setStatus("FAILURE");
 		}
 		return new ResponseEntity<VerifyResponse>(response,HttpStatus.OK);
+	}
+
+	@PostMapping("/signup")
+	public ResponseEntity<ResponseDto> signUp(@RequestBody RequestDto request)
+	{
+		ResponseDto response = new ResponseDto();
+		try {
+			response = service.saveUser(request);
+		} catch (Exception e) {
+			response.setStatus("Failed");
+		}
+		return new ResponseEntity<ResponseDto>(response,HttpStatus.OK);
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<ResponseDto> login(@RequestBody RequestDto request)
+	{
+		ResponseDto response = new ResponseDto();
+		try {
+			response = service.loginUser(request);
+		} catch (Exception e) {
+			response.setStatus("Failed");
+		}
+		return new ResponseEntity<ResponseDto>(response,HttpStatus.OK);
 	}
 	
 

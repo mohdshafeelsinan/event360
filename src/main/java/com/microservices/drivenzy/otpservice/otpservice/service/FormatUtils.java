@@ -1,5 +1,16 @@
 package com.microservices.drivenzy.otpservice.otpservice.service;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -114,6 +125,25 @@ public class FormatUtils {
 	public static LocalDateTime stringToDateTime(String dateTimeString) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		return LocalDateTime.parse(dateTimeString, formatter);
+	}
+
+	public static String generateQrCode(String data){
+		try {
+			QRCodeWriter qrCodeWriter = new QRCodeWriter();
+			BitMatrix bitMatrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, 200, 200);
+
+			// Convert QR code to image
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
+			byte[] imageBytes = outputStream.toByteArray();
+
+			// Convert image to Base64-encoded string
+			String base64Image = Base64.encodeBase64String(imageBytes);
+
+			return base64Image;
+		} catch (WriterException | IOException e) {
+			return null;
+		}
 	}
 
 }

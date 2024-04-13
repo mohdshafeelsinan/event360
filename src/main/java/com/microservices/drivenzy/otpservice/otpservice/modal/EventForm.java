@@ -1,5 +1,7 @@
 package com.microservices.drivenzy.otpservice.otpservice.modal;
 
+import com.microservices.drivenzy.otpservice.otpservice.dto.AttendeesDto;
+import com.microservices.drivenzy.otpservice.otpservice.dto.EmpDto;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -27,11 +29,21 @@ public class EventForm {
     private String eventLocation;
     private String status;
     
-    private Employees organizer;
+    private EmpDto organizer;
     private String department;
     private String eventType;
     private int maxAttendees;
     private boolean requiresRSVP;
     private boolean isInternalEvent;
-    private List<Employees> attendees = new ArrayList<>();
+    private boolean isInvitationRequired;
+    private List<AttendeesDto> attendees = new ArrayList<>();// who is attendeng and not attending
+    private List<AttendeesDto> attendance = new ArrayList<>();//once event complete the survey will be added here
+
+
+    private String eventInvitationQRCode;
+    private String eventQRCode;
+    private String eventAttendanceQRCode;
+
+    //checklist
+    private List<EventCheckList> checkList = new ArrayList<>();
 }
