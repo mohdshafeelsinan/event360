@@ -1,5 +1,8 @@
 package com.microservices.drivenzy.otpservice.otpservice.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -92,4 +95,25 @@ public class FormatUtils {
 		}
 		return result;
 	}
+
+	public static String formatDateToString(LocalDate date) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		return date.format(formatter);
+	}
+
+	public static String formatDateTimeToString(LocalDateTime dateTime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		return dateTime.format(formatter);
+	}
+
+	public static LocalDate stringToDate(String dateString) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		return LocalDate.parse(dateString, formatter);
+	}
+
+	public static LocalDateTime stringToDateTime(String dateTimeString) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		return LocalDateTime.parse(dateTimeString, formatter);
+	}
+
 }
