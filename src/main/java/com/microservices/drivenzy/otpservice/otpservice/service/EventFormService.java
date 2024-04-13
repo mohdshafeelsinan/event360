@@ -24,6 +24,9 @@ public class EventFormService {
         EventResponse response = new EventResponse();
         try {
             eventForm.setId(seqService.getNextSequence(EventForm.SEQUENCE_NAME).toString());
+            eventForm.setEventInvitationQRCode(FormatUtils.generateQrCode("www.google.com"+"/"+eventForm.getEventName()));
+            eventForm.setEventQRCode(FormatUtils.generateQrCode("www.google.com"+"/"+eventForm.getEventName()));
+            eventForm.setEventAttendanceQRCode(FormatUtils.generateQrCode("www.google.com"+"/"+eventForm.getEventName()));
             eventForm = eventFormRepository.save(eventForm);
             response.setMessege("Event Saved Successfully");
             response.setStatus("SUCCESS");
