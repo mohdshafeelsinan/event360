@@ -1,16 +1,15 @@
 package com.microservices.drivenzy.otpservice.otpservice.dto;
 
+import lombok.Data;
+
+@Data
 public class RequestDto {
 	
 	private String mobileno;
-
-	public String getMobileno() {
-		return mobileno;
-	}
-
-	public void setMobileno(String mobileno) {
-		this.mobileno = mobileno;
-	}
+	private String email;
+	private String username;
+	private String password;
+	private String role;
 	
 
 }

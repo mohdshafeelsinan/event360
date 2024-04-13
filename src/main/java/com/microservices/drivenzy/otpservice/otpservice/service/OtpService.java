@@ -90,4 +90,57 @@ public class OtpService {
 		
 		return response;
 	}
+
+	public ResponseDto saveUser(RequestDto request) {
+		ResponseDto response = new ResponseDto();
+		DvzUser user = new DvzUser();
+		try {
+			List<DvzUser> existingUser = userRepository.findByEmailOrUsername(request.getEmail(), request.getUsername());
+			if(!FormatUtils.isNullOrEmpty(existingUser))
+			{
+				response.setUsername(request.getUsername());
+				response.setStatus("FAILURE");
+				response.setMessage("User Already Exists");
+				return response;
+			}
+			user.setId(seqService.getNextSequence(DvzUser.SEQUENCE_NAME).toString());
+			user.setMobileno(request.getMobileno());
+			user.setUsername(request.getUsername());
+			user.setPassword(request.getPassword());
+			user.setEmail(request.getEmail());
+			userRepository.save(user);
+			response.setUsername(request.getUsername());
+			response.setStatus("SUCCESS");
+			response.setMessage("User Created Successfully");
+		} catch (Exception e) {
+			response.setUsername(request.getUsername());
+			response.setStatus("FAILURE");
+			response.setMessage("User Creation Failed");
+		}
+		return response;
+	}
+
+	public ResponseDto loginUser(RequestDto request) {
+		ResponseDto response = new ResponseDto();
+		try {
+			List<DvzUser> userList = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword());
+			if(!FormatUtils.isNullOrEmpty(userList))
+			{
+				response.setUsername(request.getUsername());
+				response.setStatus("SUCCESS");
+				response.setMessage("User Logged In Successfully");
+			}
+			else
+			{
+				response.setUsername(request.getUsername());
+				response.setStatus("FAILURE");
+				response.setMessage("User Not Found");
+			}
+		} catch (Exception e) {
+			response.setUsername(request.getUsername());
+			response.setStatus("FAILURE");
+			response.setMessage("User Login Failed");
+		}
+		return response;
+	}
 }
