@@ -4,6 +4,7 @@ import com.microservices.drivenzy.otpservice.otpservice.dto.EventResponse;
 import com.microservices.drivenzy.otpservice.otpservice.modal.DvzUserOtp;
 import com.microservices.drivenzy.otpservice.otpservice.modal.EventForm;
 import com.microservices.drivenzy.otpservice.otpservice.repository.EventRepository;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +19,14 @@ public class EventFormService {
     @Autowired
     private EventRepository eventFormRepository;
 
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(EventFormService.class);
+
     @Autowired
     private SequenceGeneratorService seqService;
     public EventResponse saveEventForm(EventForm eventForm) {
         EventResponse response = new EventResponse();
         try {
+            logger.info("Saving Event Form :: {}",eventForm.toString());
             eventForm.setId(seqService.getNextSequence(EventForm.SEQUENCE_NAME).toString());
             eventForm.setEventId("BFL-EVT"+eventForm.getId());
             eventForm.setEventInvitationQRCode(FormatUtils.generateQrCode("www.google.com"+"/"+eventForm.getEventName()));
