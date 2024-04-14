@@ -2,19 +2,15 @@ package com.microservices.drivenzy.otpservice.otpservice.modal;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
-@Document("master")
-public class CheckListMaster {
-
-    @Id
+public class CheckList {
     private String id;
-    private String mastername;
-    private List<CheckList> checklist = new ArrayList<>();
+    private String checklistId;
+    private String checklistName;
+    private String checklistDescription;
     private String status;
-    private String message;
+
 }

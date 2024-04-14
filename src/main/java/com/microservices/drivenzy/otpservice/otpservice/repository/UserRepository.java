@@ -12,8 +12,6 @@ public interface UserRepository extends MongoRepository<DvzUser, String>{
 	
 	List<DvzUser> findByMobileno(String mobileno);
 
-	List<DvzUser> findByMobilenoAndPassword(String mobileno, String password);
-
 	List<DvzUser> findByEmailOrUsername(String email, String username);
 
 	List<DvzUser> findByEmailAndPassword(String mobileno, String password);

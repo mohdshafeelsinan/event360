@@ -108,6 +108,7 @@ public class OtpService {
 			user.setUsername(request.getUsername());
 			user.setPassword(request.getPassword());
 			user.setEmail(request.getEmail());
+			user.setRole(request.getRole());
 			userRepository.save(user);
 			response.setUsername(request.getUsername());
 			response.setStatus("SUCCESS");
