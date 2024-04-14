@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Document("eventform")
@@ -36,13 +37,23 @@ public class EventForm {
     private boolean requiresRSVP;
     private boolean isInternalEvent;
     private boolean isInvitationRequired;
+    private boolean isVotable;
+    private boolean isSnacks;
+    private boolean needVolunteer;
     private List<AttendeesDto> attendees = new ArrayList<>();// who is attendeng and not attending
     private List<AttendeesDto> attendance = new ArrayList<>();//once event complete the survey will be added here
+    private List<AttendeesDto> volunteer = new ArrayList<>();//volunteer
 
 
     private String eventInvitationQRCode;
     private String eventQRCode;
     private String eventAttendanceQRCode;
+
+    //Budget
+    private Double budget;
+    private Double remainingBudget;
+    private Map<String, Double> expenses;
+
 
     //checklist
     private List<EventCheckList> checkList = new ArrayList<>();

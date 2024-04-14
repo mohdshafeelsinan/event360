@@ -6,6 +6,7 @@ import com.microservices.drivenzy.otpservice.otpservice.modal.EventForm;
 import com.microservices.drivenzy.otpservice.otpservice.modal.EventInvitation;
 import com.microservices.drivenzy.otpservice.otpservice.repository.EventInvitationRepository;
 import com.microservices.drivenzy.otpservice.otpservice.repository.EventRepository;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ public class EventInvitationService {
 
     @Autowired
     private SequenceGeneratorService sequenceGeneratorService;
+
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(EventInvitationScheduler.class);
 
     public void saveEventInvitation(EventInvitation eventInvitation) {
         try{
@@ -38,7 +41,6 @@ public class EventInvitationService {
             if (eventForm == null) {
                 throw new Exception("Event Form not found");
             }
-
             AttendeesDto attendeesDto = createAttendeesDto(eventInvitation);
             switch (eventInvitation.getCategory()) {
                 case CommonConstants.EVENT_CATEGORY_INVITATION:
@@ -47,7 +49,11 @@ public class EventInvitationService {
                 case CommonConstants.EVENT_CATEGORY_FEEDBACK:
                     eventForm.getAttendance().add(attendeesDto);
                     break;
+                case CommonConstants.EVENT_CATEGORY_VOLUNTEER:
+                    eventForm.getVolunteer().add(attendeesDto);
+                    break;
                 default:
+                    logger.error("Invalid category");
                     throw new Exception("Invalid category");
             }
             eventRepository.save(eventForm);
@@ -55,6 +61,7 @@ public class EventInvitationService {
             eventInvitationRepository.save(eventInvitation);
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("Error in updating the status of Event Invitation Employee :: Error {}", e.getMessage());
             throw e;
         }
     }

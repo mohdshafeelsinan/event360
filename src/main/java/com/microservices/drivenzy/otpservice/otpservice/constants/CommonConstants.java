@@ -6,4 +6,6 @@ public class CommonConstants {
 
     public static final String EVENT_CATEGORY_FEEDBACK = "Feedback";
     public static final String EVENT_CATEGORY_INVITATION = "Invitation";
+
+    public static final String EVENT_CATEGORY_VOLUNTEER = "Volunteer";
 }

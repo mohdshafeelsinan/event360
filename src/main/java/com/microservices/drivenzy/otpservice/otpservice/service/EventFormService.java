@@ -24,6 +24,7 @@ public class EventFormService {
         EventResponse response = new EventResponse();
         try {
             eventForm.setId(seqService.getNextSequence(EventForm.SEQUENCE_NAME).toString());
+            eventForm.setEventId("BFL-EVT"+eventForm.getId());
             eventForm.setEventInvitationQRCode(FormatUtils.generateQrCode("www.google.com"+"/"+eventForm.getEventName()));
             eventForm.setEventQRCode(FormatUtils.generateQrCode("www.google.com"+"/"+eventForm.getEventName()));
             eventForm.setEventAttendanceQRCode(FormatUtils.generateQrCode("www.google.com"+"/"+eventForm.getEventName()));
