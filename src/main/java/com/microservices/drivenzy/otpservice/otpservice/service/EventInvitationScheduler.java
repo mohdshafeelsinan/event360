@@ -29,7 +29,6 @@ public class EventInvitationScheduler {
     public void fetchEventInvitationEmployeeAndUpdate() {
         try{
             logger.info("Fetching Event Invitation Employee and updating the status");
-            //write a executerservice code with thread 10 and update the status of the event invitation
             List<EventInvitation> eventInvitations = eventInvitationRepository.findByStatus(CommonConstants.STATUS_PENDING);
             if(!FormatUtils.isNullOrEmpty(eventInvitations))
             {

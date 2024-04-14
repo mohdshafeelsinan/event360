@@ -128,6 +128,8 @@ public class OtpService {
 			if(!FormatUtils.isNullOrEmpty(userList))
 			{
 				response.setUsername(request.getUsername());
+				response.setEmail(request.getEmail());
+				response.setRole(userList.get(0).getRole());
 				response.setStatus("SUCCESS");
 				response.setMessage("User Logged In Successfully");
 			}
