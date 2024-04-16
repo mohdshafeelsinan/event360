@@ -56,5 +56,5 @@ public class EventForm {
 
 
     //checklist
-    private List<EventCheckList> checkList = new ArrayList<>();
+    private List<EventCheckList> checkLists = new ArrayList<>();
 }
