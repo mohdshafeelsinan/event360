@@ -5,7 +5,9 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.microservices.drivenzy.otpservice.otpservice.dto.EventRequestDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EventResponse;
+import com.microservices.drivenzy.otpservice.otpservice.modal.Employees;
 import com.microservices.drivenzy.otpservice.otpservice.service.EventFormService;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +96,31 @@ public class EventController {
             } catch (WriterException | IOException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
+    }
+
+    @PostMapping("/event/update")
+    public ResponseEntity<EventResponse> updateEmployee(@RequestBody EventRequestDto eventRequestDto) {
+        EventResponse response = new EventResponse();
+        EventForm eventForm = new EventForm();
+        try {
+            eventForm = eventFormService.updateEventForm(eventRequestDto);
+            if(eventForm == null) {
+                response.setStatus("FAILURE");
+                response.setMessege("Could not update employee");
+                return new ResponseEntity<EventResponse>(response, HttpStatus.OK);
+            }
+            response.setEventForm(eventForm);
+            response.setStatus("SUCCESS");
+            response.setMessege("Employee updated successfully");
+        } catch (Exception e) {
+            // Handle the error here
+            e.printStackTrace();
+            // You can also throw a custom exception or return an error response
+            response.setStatus("FAILURE");
+            response.setMessege("Could not update employee");
+
+        }
+        return new ResponseEntity<EventResponse>(response, HttpStatus.OK);
     }
 
 

@@ -1,5 +1,9 @@
 package com.microservices.drivenzy.otpservice.otpservice.service;
 
+import com.microservices.drivenzy.otpservice.otpservice.constants.CommonConstants;
+import com.microservices.drivenzy.otpservice.otpservice.dto.AttendeesDto;
+import com.microservices.drivenzy.otpservice.otpservice.dto.EmpDto;
+import com.microservices.drivenzy.otpservice.otpservice.dto.EventRequestDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EventResponse;
 import com.microservices.drivenzy.otpservice.otpservice.modal.DvzUserOtp;
 import com.microservices.drivenzy.otpservice.otpservice.modal.EventForm;
@@ -86,6 +90,46 @@ public class EventFormService {
             // Handle the exception or log the error
             e.printStackTrace();
             return new ArrayList<>(); // Return an empty list in case of an error
+        }
+    }
+
+    public EventForm updateEventForm(EventRequestDto eventRequestDto) {
+        try {
+            logger.info("Updating the status of Event Form :: {}",eventRequestDto.toString());
+            EventForm eventForm = eventFormRepository.findByEventId(eventRequestDto.getEventId());
+            AttendeesDto attendeesDto = new AttendeesDto();
+            EmpDto empDto = new EmpDto();
+            empDto.setEmail(eventRequestDto.getEmployeeMail());
+            attendeesDto.setEmployee(empDto);
+            attendeesDto.setCategory(eventRequestDto.getCategory());
+            attendeesDto.setType(eventRequestDto.getType());
+            attendeesDto.setStatus(CommonConstants.STATUS_APPROVED);
+            attendeesDto.setFeedback(eventRequestDto.getFeedback());
+            attendeesDto.setRating(eventRequestDto.getRating());
+            attendeesDto.setIsAttending(eventRequestDto.getIsAttending());
+            attendeesDto.setIsPresent(eventRequestDto.getIsPresent());
+
+            switch (eventRequestDto.getCategory()) {
+                case CommonConstants.EVENT_CATEGORY_INVITATION:
+                    eventForm.getAttendees().add(attendeesDto);
+                    break;
+                case CommonConstants.EVENT_CATEGORY_FEEDBACK:
+                    eventForm.getAttendance().add(attendeesDto);
+                    break;
+                case CommonConstants.EVENT_CATEGORY_VOLUNTEER:
+                    eventForm.getVolunteer().add(attendeesDto);
+                    break;
+                default:
+                    logger.error("Invalid category");
+                    throw new Exception("Invalid category");
+            }
+            logger.info("Updating the status of Event Form :: {}",eventForm.toString());
+            return eventFormRepository.save(eventForm);
+        } catch (Exception e) {
+            logger.error("Error in updating the status of Event Form :: Error {}", e.getMessage());
+            // Handle the exception or log the error
+            e.printStackTrace();
+            return null; // Return null in case of an error
         }
     }
 }
