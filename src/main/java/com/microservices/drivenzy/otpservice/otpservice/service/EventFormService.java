@@ -5,7 +5,6 @@ import com.microservices.drivenzy.otpservice.otpservice.dto.AttendeesDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EmpDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EventRequestDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EventResponse;
-import com.microservices.drivenzy.otpservice.otpservice.modal.DvzUserOtp;
 import com.microservices.drivenzy.otpservice.otpservice.modal.EventForm;
 import com.microservices.drivenzy.otpservice.otpservice.repository.EventRepository;
 import org.slf4j.Logger;
@@ -22,6 +21,9 @@ public class EventFormService {
 
     @Autowired
     private EventRepository eventFormRepository;
+
+    @Autowired
+    private MailService mailService;
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(EventFormService.class);
 
@@ -118,6 +120,7 @@ public class EventFormService {
                     break;
                 case CommonConstants.EVENT_CATEGORY_VOLUNTEER:
                     eventForm.getVolunteer().add(attendeesDto);
+                    sendMail(eventRequestDto.getEmployeeMail(), "Volunteer Confirmation", "You have been confirmed as a volunteer for the event "+eventForm.getEventName());
                     break;
                 default:
                     logger.error("Invalid category");
@@ -130,6 +133,14 @@ public class EventFormService {
             // Handle the exception or log the error
             e.printStackTrace();
             return null; // Return null in case of an error
+        }
+    }
+
+    private void sendMail(String email, String subject, String message) {
+        try{
+            mailService.sendEmail(email, subject, message);
+        }catch (Exception e){
+            logger.error("Error in sending mail :: Error {}", e.getMessage());
         }
     }
 }
