@@ -26,9 +26,9 @@ public class LeaveTrackerService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    public List<String> findEmployeesOnLeave1(String month, String day) {
-        List<LeaveTracker> attendances = leaveTrackerRepository.findByMonth(month);
-        logger.info("Attendance data: " + attendances.toString());
+    public List<String> findEmployeesOnLeave1(String month, String day, String year) {
+        List<LeaveTracker> attendances = leaveTrackerRepository.findByMonthAndYear(month, year);
+//        logger.info("Attendance data: " + attendances.toString());
         List<String> employeesOnLeave = new ArrayList<>();
         for (LeaveTracker attendance : attendances) {
             for (Map.Entry<String, Map<String, Integer>> entry : attendance.getEmployeeAttendance().entrySet()) {
@@ -40,7 +40,7 @@ public class LeaveTrackerService {
         return employeesOnLeave;
     }
 
-    public List<String> findEmployeesOnLeave(String month, String day) {
+    public List<String> findEmployeesOnLeave(String month, String day, String year) {
         Query query = new Query();
         query.addCriteria(Criteria.where("month").is(month).and("employeeAttendance.$.*." + day).is(1));
 
@@ -67,7 +67,7 @@ public class LeaveTrackerService {
         }
     }
 
-    public void importExcelFile(MultipartFile file, String month) {
+    public void importExcelFile(MultipartFile file, String month, String year) {
         logger.info("Importing Excel file");
         try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0);
@@ -75,6 +75,7 @@ public class LeaveTrackerService {
 
             LeaveTracker attendance = new LeaveTracker();
             attendance.setMonth(month);
+            attendance.setYear(year);
             Map<String, Map<String, Integer>> employeeAttendance = new HashMap<>();
 
             while (rows.hasNext()) {
@@ -107,7 +108,7 @@ public class LeaveTrackerService {
                 employeeAttendance.put(empCode, attendanceMap);
             }
             attendance.setEmployeeAttendance(employeeAttendance);
-            logger.info("Attendance data: " + attendance.toString());
+//            logger.info("Attendance data: " + attendance.toString());
             saveLeaveTracker(attendance);
             logger.info("Successfully imported data from Excel file");
         } catch (IOException e) {

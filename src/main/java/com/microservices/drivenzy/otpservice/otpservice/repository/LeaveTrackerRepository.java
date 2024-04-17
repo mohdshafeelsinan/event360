@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface LeaveTrackerRepository extends MongoRepository<LeaveTracker, String> {
     List<LeaveTracker> findByMonth(String month);
+
+    List<LeaveTracker> findByMonthAndYear(String month, String year);
 }
