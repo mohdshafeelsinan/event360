@@ -34,7 +34,7 @@ public class LeaveTrackerController {
     public CommonResponse getEmployeesOnLeave(@RequestParam("month") String month, @RequestParam("day") String day, @RequestParam("year") String year) {
         logger.info("Getting employees on leave"+month+" "+day);
         try{
-            return new CommonResponse("Employees on leave", "success", leaveTrackerService.findEmployeesOnLeave1(month, day, year));
+            return new CommonResponse("Employees on leave", "success", leaveTrackerService.findEmployeesOnLeaveDetails(month, day, year));
         } catch (Exception e) {
             return new CommonResponse("Failed to get employees on leave", "failed", null);
         }
