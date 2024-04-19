@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class EventCheckList {
-    private CheckListMaster checkListMaster = new CheckListMaster();
+//    private CheckList checkList = new CheckList();
     private Boolean isCompleted;
+    private String checklistDescription;
 }

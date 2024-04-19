@@ -11,6 +11,7 @@ public class ResponseDto {
 	private String message;
 	private String email;
 	private String username;
+	private String role;
 	
 	
 

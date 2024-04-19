@@ -7,5 +7,6 @@ public class EmpDto {
     private String empid;
     private String name;
     private String email;
+    private String department;
 
 }

@@ -4,8 +4,6 @@ import lombok.Data;
 
 @Data
 public class AttendeesDto {
-
-
     private EmpDto employee;
     private String status;
     private String category;// can be invitation or feedback

@@ -108,6 +108,7 @@ public class OtpService {
 			user.setUsername(request.getUsername());
 			user.setPassword(request.getPassword());
 			user.setEmail(request.getEmail());
+			user.setRole(request.getRole());
 			userRepository.save(user);
 			response.setUsername(request.getUsername());
 			response.setStatus("SUCCESS");
@@ -127,6 +128,8 @@ public class OtpService {
 			if(!FormatUtils.isNullOrEmpty(userList))
 			{
 				response.setUsername(request.getUsername());
+				response.setEmail(request.getEmail());
+				response.setRole(userList.get(0).getRole());
 				response.setStatus("SUCCESS");
 				response.setMessage("User Logged In Successfully");
 			}
