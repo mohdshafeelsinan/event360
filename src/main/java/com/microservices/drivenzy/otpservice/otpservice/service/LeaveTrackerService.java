@@ -111,7 +111,8 @@ public class LeaveTrackerService {
                 Map<String, Integer> attendanceMap = new HashMap<>();
                 for (int i = 2; i < currentRow.getPhysicalNumberOfCells(); i++) {
                     Cell cell = currentRow.getCell(i);
-                    attendanceMap.put(String.valueOf(i - 1), (int) cell.getNumericCellValue());
+                    int value = getValue(cell);
+                    attendanceMap.put(String.valueOf(i - 1), value);
                 }
 
                 employeeAttendance.put(empCode, attendanceMap);
@@ -124,5 +125,21 @@ public class LeaveTrackerService {
             logger.info("Failed to import data from Excel file");
             throw new RuntimeException("Failed to import data from Excel file", e);
         }
+    }
+
+    private int getValue(Cell cell) {
+        short colorIndex = cell.getCellStyle().getFillForegroundColor();
+        int value;
+        logger.info("Color index: " + colorIndex);
+        if (colorIndex == IndexedColors.RED.getIndex()) {
+            value = 1;
+        } else if (colorIndex == IndexedColors.ORANGE.getIndex()) {
+            value = 2;
+        } else if (colorIndex == IndexedColors.BLUE.getIndex()) {
+            value = 3;
+        } else {
+            value = (int) cell.getNumericCellValue();
+        }
+        return value;
     }
 }
