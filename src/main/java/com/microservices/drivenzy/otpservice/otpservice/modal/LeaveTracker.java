@@ -18,4 +18,5 @@ public class LeaveTracker {
     private String month;
     private String year;
     private Map<String, Map<String, Integer>> employeeAttendance;
+    private String department;
 }

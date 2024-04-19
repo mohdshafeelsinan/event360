@@ -1,6 +1,7 @@
 package com.microservices.drivenzy.otpservice.otpservice.controller;
 
 import com.microservices.drivenzy.otpservice.otpservice.modal.CommonResponse;
+import com.microservices.drivenzy.otpservice.otpservice.service.FormatUtils;
 import com.microservices.drivenzy.otpservice.otpservice.service.LeaveTrackerService;
 import com.microservices.drivenzy.otpservice.otpservice.service.MailService;
 import org.slf4j.Logger;
@@ -30,11 +31,27 @@ public class LeaveTrackerController {
         }
     }
 
+//    @PostMapping("/employeesOnLeave")
+//    public CommonResponse getEmployeesOnLeave(@RequestParam("month") String month, @RequestParam("day") String day, @RequestParam("year") String year) {
+//        logger.info("Getting employees on leave"+month+" "+day);
+//        try{
+//            return new CommonResponse("Employees on leave", "success", leaveTrackerService.findEmployeesOnLeaveDetails(month, day, year));
+//        } catch (Exception e) {
+//            return new CommonResponse("Failed to get employees on leave", "failed", null);
+//        }
+//    }
+
     @PostMapping("/employeesOnLeave")
-    public CommonResponse getEmployeesOnLeave(@RequestParam("month") String month, @RequestParam("day") String day, @RequestParam("year") String year) {
-        logger.info("Getting employees on leave"+month+" "+day);
+    public CommonResponse getEmployeesOnLeave(@RequestParam("month") String month, @RequestParam("day") String day, @RequestParam("year") String year, @RequestParam("department") String department) {
+        logger.info("Getting employees on leave"+month+" "+day+" "+department);
         try{
-            return new CommonResponse("Employees on leave", "success", leaveTrackerService.findEmployeesOnLeaveDetails(month, day, year));
+            if(FormatUtils.isNullOrEmpty(department)){
+                return new CommonResponse("Employees on leave", "success", leaveTrackerService.findEmployeesOnLeaveDetails(month, day, year));
+            }
+            else {
+                logger.info("Getting employees on leave"+month+" "+day+" "+department);
+                return new CommonResponse("Employees on leave", "success", leaveTrackerService.findEmployeesOnLeaveDetails(month, day, year, department));
+            }
         } catch (Exception e) {
             return new CommonResponse("Failed to get employees on leave", "failed", null);
         }
