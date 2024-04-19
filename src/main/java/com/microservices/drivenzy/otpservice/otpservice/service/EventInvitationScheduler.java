@@ -1,8 +1,10 @@
 package com.microservices.drivenzy.otpservice.otpservice.service;
 
 import com.microservices.drivenzy.otpservice.otpservice.constants.CommonConstants;
+import com.microservices.drivenzy.otpservice.otpservice.modal.EventForm;
 import com.microservices.drivenzy.otpservice.otpservice.modal.EventInvitation;
 import com.microservices.drivenzy.otpservice.otpservice.repository.EventInvitationRepository;
+import com.microservices.drivenzy.otpservice.otpservice.repository.EventRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,6 +24,9 @@ public class EventInvitationScheduler {
 
     @Autowired
     EventInvitationService eventInvitationService;
+
+    @Autowired
+    EventFormService eventFormService;
 
     private ExecutorService executor = Executors.newFixedThreadPool(10);
 
@@ -51,4 +56,32 @@ public class EventInvitationScheduler {
 
 
     }
+
+    @Scheduled(initialDelay = 0, fixedRate = 300000)
+    public void fetchEventHappeningTodayAndUpdateEmployeePresentStatus() {
+        try{
+            logger.info("Fetching Event Happening Today and updating the status");
+            List<EventForm> eventForms = eventFormService.getEventsTodayNewQuery();
+            if(!FormatUtils.isNullOrEmpty(eventForms))
+            {
+                for(EventForm eventForm : eventForms)
+                {
+                    executor.execute(() -> {
+                        try {
+                            eventFormService.updateEmployeePresentStatus(eventForm);
+                        } catch (Exception e) {
+                            logger.error("Error in updating the status of Event Happening Today and updating the status :: Error {}", e.getMessage());
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+            }
+        }catch (Exception e){
+            logger.error("Error in fetching Event Happening Today and updating the status :: Error {}", e.getMessage());
+        }
+
+
+
+    }
+
 }

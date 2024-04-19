@@ -5,23 +5,35 @@ import com.microservices.drivenzy.otpservice.otpservice.dto.AttendeesDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EmpDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EventRequestDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EventResponse;
-import com.microservices.drivenzy.otpservice.otpservice.modal.DvzUserOtp;
 import com.microservices.drivenzy.otpservice.otpservice.modal.EventForm;
 import com.microservices.drivenzy.otpservice.otpservice.repository.EventRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class EventFormService {
 
     @Autowired
     private EventRepository eventFormRepository;
+
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private LeaveTrackerService leaveTrackerService;
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(EventFormService.class);
 
@@ -118,6 +130,7 @@ public class EventFormService {
                     break;
                 case CommonConstants.EVENT_CATEGORY_VOLUNTEER:
                     eventForm.getVolunteer().add(attendeesDto);
+                    sendMail(eventRequestDto.getEmployeeMail(), "Volunteer Confirmation", "You have been confirmed as a volunteer for the event "+eventForm.getEventName());
                     break;
                 default:
                     logger.error("Invalid category");
@@ -130,6 +143,56 @@ public class EventFormService {
             // Handle the exception or log the error
             e.printStackTrace();
             return null; // Return null in case of an error
+        }
+    }
+
+    private void sendMail(String email, String subject, String message) {
+        try{
+            mailService.sendEmail(email, subject, message);
+        }catch (Exception e){
+            logger.error("Error in sending mail :: Error {}", e.getMessage());
+        }
+    }
+
+    public List<EventForm> getEventsTodayNewQuery() {
+        String fromDate = LocalDate.now().toString();
+        String toDate = LocalDate.now().plusDays(1).toString();
+        logger.info("From Date :: {} To Date :: {}",fromDate, toDate);
+
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+//        LocalDateTime fromDate = LocalDateTime.now().withHour(0).withMinute(1).withSecond(40).withNano(135000000);
+//        LocalDateTime toDate = LocalDateTime.now().plusDays(1).withHour(23).withMinute(55).withSecond(40).withNano(135000000);
+//        String fromDateStr = fromDate.format(formatter);
+//        String toDateStr = toDate.format(formatter);
+//        logger.info("From Date :: {} To Date :: {}", fromDateStr, toDateStr);
+
+        return eventFormRepository.findByEventFromDateBetween(fromDate, toDate);
+    }
+
+    public void updateEmployeePresentStatus(EventForm eventForm) {
+        try {
+            logger.info("Updating the status of Employee Present Status :: {}",eventForm.toString());
+            LocalDate today = LocalDate.now();
+            String day = String.valueOf(today.getDayOfMonth());
+            String month = today.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+            String year = String.valueOf(today.getYear());
+            logger.info("Day :: {} Month :: {} Year :: {}",day, month, year);
+
+            leaveTrackerService.findEmployeesOnLeave1(month,day,year).forEach(emp -> {
+                eventForm.getAttendance().forEach(attendeesDto -> {
+                    if(attendeesDto.getEmployee().getEmail().equals(emp) || attendeesDto.getEmployee().getEmail().equals(emp+"@bajajfinserv.in")){
+                        attendeesDto.setIsPresent(false);
+                    }
+                    else {
+                        attendeesDto.setIsPresent(true);
+                    }
+                });
+            });
+            eventFormRepository.save(eventForm);
+        } catch (Exception e) {
+            logger.error("Error in updating the status of Employee Present Status :: Error {}", e.getMessage());
+            // Handle the exception or log the error
+            e.printStackTrace();
         }
     }
 }

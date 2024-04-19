@@ -123,5 +123,11 @@ public class EventController {
         return new ResponseEntity<EventResponse>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/getTodayEvents")
+    public ResponseEntity<List<EventForm>> getTodayEvents() {
+        List<EventForm> events = eventFormService.getEventsTodayNewQuery();
+        return new ResponseEntity<List<EventForm>>(events, HttpStatus.OK);
+    }
+
 
 }

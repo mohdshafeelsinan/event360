@@ -1,5 +1,7 @@
 package com.microservices.drivenzy.otpservice.otpservice.service;
 
+import com.microservices.drivenzy.otpservice.otpservice.dto.EmpDto;
+import com.microservices.drivenzy.otpservice.otpservice.dto.EmployeeOnLeaveDto;
 import com.microservices.drivenzy.otpservice.otpservice.modal.LeaveTracker;
 import com.microservices.drivenzy.otpservice.otpservice.repository.LeaveTrackerRepository;
 import org.apache.poi.ss.usermodel.*;
@@ -34,27 +36,34 @@ public class LeaveTrackerService {
             for (Map.Entry<String, Map<String, Integer>> entry : attendance.getEmployeeAttendance().entrySet()) {
                 if (entry.getValue().get(day) == 1) {
                     employeesOnLeave.add(entry.getKey());
+                }else if(entry.getValue().get(day) == 2){
+                    employeesOnLeave.add(entry.getKey());
+                }else if(entry.getValue().get(day) == 3){
+                    employeesOnLeave.add(entry.getKey());
                 }
             }
         }
         return employeesOnLeave;
     }
 
-    public List<String> findEmployeesOnLeave(String month, String day, String year) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("month").is(month).and("employeeAttendance.$.*." + day).is(1));
-
-        List<LeaveTracker> attendances = mongoTemplate.find(query, LeaveTracker.class);
-        logger.info("Attendance data: " + attendances.toString());
-        List<String> employeesOnLeave = new ArrayList<>();
+    public EmployeeOnLeaveDto findEmployeesOnLeaveDetails(String month, String day, String year) {
+        List<LeaveTracker> attendances = leaveTrackerRepository.findByMonthAndYear(month, year);
+//        logger.info("Attendance data: " + attendances.toString());
+        EmployeeOnLeaveDto employeeOnLeaveDto = new EmployeeOnLeaveDto();
         for (LeaveTracker attendance : attendances) {
             for (Map.Entry<String, Map<String, Integer>> entry : attendance.getEmployeeAttendance().entrySet()) {
+                EmpDto empDto = new EmpDto();
+                empDto.setName(entry.getKey());
                 if (entry.getValue().get(day) == 1) {
-                    employeesOnLeave.add(entry.getKey());
+                    employeeOnLeaveDto.getLeaveEmployees().add(empDto);
+                }else if(entry.getValue().get(day) == 2){
+                    employeeOnLeaveDto.getWfhEmployees().add(empDto);
+                }else if(entry.getValue().get(day) == 3){
+                    employeeOnLeaveDto.getOnSiteEmployees().add(empDto);
                 }
             }
         }
-        return employeesOnLeave;
+        return employeeOnLeaveDto;
     }
 
     private static final Logger logger = Logger.getLogger(LeaveTrackerService.class.getName());
