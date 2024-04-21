@@ -111,6 +111,9 @@ public class OtpService {
 			user.setRole(request.getRole());
 			userRepository.save(user);
 			response.setUsername(request.getUsername());
+			response.setEmail(request.getEmail());
+			response.setRole(request.getRole());
+			response.setMobileno(request.getMobileno());
 			response.setStatus("SUCCESS");
 			response.setMessage("User Created Successfully");
 		} catch (Exception e) {
