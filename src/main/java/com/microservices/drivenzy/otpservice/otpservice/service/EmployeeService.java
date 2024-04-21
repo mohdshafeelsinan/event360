@@ -44,6 +44,16 @@ public class EmployeeService {
         }
     }
 
+    public Employees getEmployeeByEmpId(String empId) {
+        try {
+            return employeeRepository.findByEmpId(empId);
+        } catch (Exception e) {
+            // Handle the exception here
+            e.printStackTrace();
+            return null; // Or throw a custom exception
+        }
+    }
+
     public List<Employees> getEmployeeByEmail(String email) {
         try {
             return employeeRepository.findByEmail(email);
