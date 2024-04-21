@@ -52,7 +52,7 @@ public class LeaveTrackerService {
 
     public EmployeeOnLeaveDto findEmployeesOnLeaveDetails(String month, String day, String year) {
         List<LeaveTracker> attendances = leaveTrackerRepository.findByMonthAndYear(month, year);
-//        logger.info("Attendance data: " + attendances.toString());
+        logger.info("Attendance data: " + attendances.toString());
         EmployeeOnLeaveDto employeeOnLeaveDto = new EmployeeOnLeaveDto();
         for (LeaveTracker attendance : attendances) {
             for (Map.Entry<String, Map<String, Integer>> entry : attendance.getEmployeeAttendance().entrySet()) {

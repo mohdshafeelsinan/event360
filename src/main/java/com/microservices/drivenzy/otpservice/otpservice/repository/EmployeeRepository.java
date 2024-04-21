@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface EmployeeRepository extends MongoRepository<Employees, String> {
     List<Employees> findByEmail(String email);
 
-    Employees findByEmpId(String empId);
+    Employees findByEmpid(String empId);
 }

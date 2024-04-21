@@ -61,7 +61,7 @@ public class EmployeeService {
 
     public Employees getEmployeeByEmpId(String empId) {
         try {
-            return employeeRepository.findByEmpId(empId);
+            return employeeRepository.findByEmpid(empId);
         } catch (Exception e) {
             // Handle the exception here
             e.printStackTrace();
