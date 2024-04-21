@@ -133,6 +133,4 @@ public class EventController {
         List<EventForm> events = eventFormService.getEventsTodayNewQuery();
         return new ResponseEntity<List<EventForm>>(events, HttpStatus.OK);
     }
-
-
 }

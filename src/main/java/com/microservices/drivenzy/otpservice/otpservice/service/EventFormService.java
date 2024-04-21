@@ -210,4 +210,13 @@ public class EventFormService {
             e.printStackTrace();
         }
     }
+
+    public Long getEventCount(){
+        try {
+            return eventFormRepository.count();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
