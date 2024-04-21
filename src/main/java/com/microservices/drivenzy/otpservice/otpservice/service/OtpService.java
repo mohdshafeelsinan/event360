@@ -105,12 +105,15 @@ public class OtpService {
 			}
 			user.setId(seqService.getNextSequence(DvzUser.SEQUENCE_NAME).toString());
 			user.setMobileno(request.getMobileno());
-			user.setUsername(request.getUsername());
+			user.setUsername(request.getEmail());
 			user.setPassword(request.getPassword());
 			user.setEmail(request.getEmail());
 			user.setRole(request.getRole());
 			userRepository.save(user);
 			response.setUsername(request.getUsername());
+			response.setEmail(request.getEmail());
+			response.setRole(request.getRole());
+			response.setMobileno(request.getMobileno());
 			response.setStatus("SUCCESS");
 			response.setMessage("User Created Successfully");
 		} catch (Exception e) {
