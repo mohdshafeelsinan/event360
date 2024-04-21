@@ -66,6 +66,7 @@ public class EmployeeController {
         }catch (Exception e){
             e.printStackTrace();
         }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
     @GetMapping("/{id}")
     public ResponseEntity<Employees> getEmployeeById(@PathVariable String id) {
