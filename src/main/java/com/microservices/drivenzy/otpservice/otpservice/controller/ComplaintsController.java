@@ -6,7 +6,6 @@ import com.microservices.drivenzy.otpservice.otpservice.service.ComplaintsServic
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/complaints")
@@ -31,5 +30,4 @@ public class ComplaintsController {
             return new CommonResponse("Failed to register your complaint","Failed",null);
         }
     }
-
 }

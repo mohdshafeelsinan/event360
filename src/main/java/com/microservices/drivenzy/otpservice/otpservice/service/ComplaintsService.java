@@ -26,9 +26,8 @@ public class ComplaintsService {
         try {
             return complaintsRepository.findAll();
         } catch (Exception e) {
-            // Handle the exception here
             e.printStackTrace();
-            return null; // Or throw a custom exception
+            return null;
         }
     }
 }
