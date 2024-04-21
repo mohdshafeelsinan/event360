@@ -11,4 +11,7 @@ public class Dashboard {
     private Long eventCount;
     private List<Employees> employeesDob;
     private List<DepartmentLeaveDto> departmentLeaveDtosList;
+    private int totalLeaveCount;
+    private int totalWfhCount;
+    private int totalOnSiteCount;
 }

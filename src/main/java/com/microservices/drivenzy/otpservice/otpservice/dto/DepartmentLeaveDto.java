@@ -8,4 +8,6 @@ public class DepartmentLeaveDto {
     private int leaveCount;
     private int wfhCount;
     private int onSiteCount;
+    
+
 }
