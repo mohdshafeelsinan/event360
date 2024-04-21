@@ -58,10 +58,12 @@ public class LeaveTrackerService {
             for (Map.Entry<String, Map<String, Integer>> entry : attendance.getEmployeeAttendance().entrySet()) {
                 EmpDto empDto = new EmpDto();
                 empDto.setName(entry.getKey());
-                List<Employees> employees =  employeeService.getEmployeeByEmail(entry.getKey()+"@bajajfinserv.in");
+                //List<Employees> employees =  employeeService.getEmployeeByEmail(entry.getKey()+"@bajajfinserv.in");
+                Employees employees = employeeService.getEmployeeByEmpId(entry.getKey());
                 if(!FormatUtils.isNullOrEmpty(employees)){
-                    empDto.setDepartment(employees.get(0).getDepartment());
-                    empDto.setEmail(employees.get(0).getEmail());
+                    empDto.setName(employees.getName());
+                    empDto.setDepartment(employees.getDepartment());
+                    empDto.setEmail(employees.getEmail());
                 }
                 if (entry.getValue().get(day) == 1) {
                     employeeOnLeaveDto.getLeaveEmployees().add(empDto);
@@ -84,10 +86,16 @@ public class LeaveTrackerService {
             for (Map.Entry<String, Map<String, Integer>> entry : attendance.getEmployeeAttendance().entrySet()) {
                 EmpDto empDto = new EmpDto();
                 empDto.setName(entry.getKey());
-                List<Employees> employees =  employeeService.getEmployeeByEmail(entry.getKey()+"@bajajfinserv.in");
-                if(!FormatUtils.isNullOrEmpty(employees) && employees.get(0).getDepartment().equals(department)){
-                    empDto.setDepartment(employees.get(0).getDepartment());
-                    empDto.setEmail(employees.get(0).getEmail());
+//                List<Employees> employees =  employeeService.getEmployeeByEmail(entry.getKey()+"@bajajfinserv.in");
+                Employees employees = employeeService.getEmployeeByEmpId(entry.getKey());
+                if(!FormatUtils.isNullOrEmpty(employees)){
+                    empDto.setDepartment(employees.getDepartment());
+                    empDto.setEmail(employees.getEmail());
+                }
+                if(!FormatUtils.isNullOrEmpty(employees) && employees.getDepartment().equals(department)){
+                    empDto.setDepartment(employees.getDepartment());
+                    empDto.setEmail(employees.getEmail());
+                    empDto.setName(employees.getName());
                     if (entry.getValue().get(day) == 1) {
                         employeeOnLeaveDto.getLeaveEmployees().add(empDto);
                     }else if(entry.getValue().get(day) == 2){
