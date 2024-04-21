@@ -67,7 +67,7 @@ public class EventFormService {
         EventResponse response = new EventResponse();
         try {
             eventFormRepository.save(eventForm);
-            response.setMessege("Event Saved Successfully");
+            response.setMessege("Event Updated Successfully");
             response.setStatus("SUCCESS");
             response.setEventId(eventForm.getId());
         } catch (Exception e) {
