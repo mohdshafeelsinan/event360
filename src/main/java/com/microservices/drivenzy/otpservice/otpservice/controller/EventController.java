@@ -33,7 +33,12 @@ public class EventController {
     public ResponseEntity<EventResponse> saveEventForm(@RequestBody EventForm eventForm) {
         EventResponse response = new EventResponse();
         try {
-            response = eventFormService.saveEventForm(eventForm);
+            if(eventForm.getEventId() == null || eventForm.getEventId().isEmpty()) {
+                response = eventFormService.updateEventForm(eventForm);
+            }else{
+                response = eventFormService.saveEventForm(eventForm);
+            }
+
         } catch (Exception e) {
             response.setMessege("Error In Request");
             response.setStatus("FAILURE");

@@ -52,7 +52,7 @@ public class EmployeeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
+  
     @PostMapping("/getSpecialist")
     public ResponseEntity<List<Employees>> getSpecialist(@RequestBody Employees employees){
         EmployeeExperience employeeExperience = employees.getEmployeeExperience().get(0);
@@ -65,6 +65,21 @@ public class EmployeeController {
             }
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Employees> getEmployeeById(@PathVariable String id) {
+        try {
+            Employees employee = employeeService.getEmployeeByEmpId(id);
+            if (employee != null) {
+                return ResponseEntity.ok(employee);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            // Handle the error here
+            e.printStackTrace();
+            // You can also throw a custom exception or return an error response
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

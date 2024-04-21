@@ -35,7 +35,6 @@ public class EmployeeService {
             return null; // Or throw a custom exception
         }
     }
-
     public List<Employees> getSpecialistEmp(String domain, Double exp){
         List<Employees> allemp = getAllEmployees();
         List<Employees> result = new ArrayList<>();
@@ -49,6 +48,35 @@ public class EmployeeService {
             }
         }
         return result;
+    }
+    public Employees getEmployeeById(String id) {
+        try {
+            return employeeRepository.findById(id).orElse(null);
+        } catch (Exception e) {
+            // Handle the exception here
+            e.printStackTrace();
+            return null; // Or throw a custom exception
+        }
+    }
+
+    public Employees getEmployeeByEmpId(String empId) {
+        try {
+            return employeeRepository.findByEmpId(empId);
+        } catch (Exception e) {
+            // Handle the exception here
+            e.printStackTrace();
+            return null; // Or throw a custom exception
+        }
+    }
+
+    public List<Employees> getEmployeeByEmail(String email) {
+        try {
+            return employeeRepository.findByEmail(email);
+        } catch (Exception e) {
+            // Handle the exception here
+            e.printStackTrace();
+            return null; // Or throw a custom exception
+        }
     }
 }
 

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -39,6 +40,7 @@ public class EventFormService {
 
     @Autowired
     private SequenceGeneratorService seqService;
+
     public EventResponse saveEventForm(EventForm eventForm) {
         EventResponse response = new EventResponse();
         try {
@@ -59,6 +61,24 @@ public class EventFormService {
         }
         return response;
         
+    }
+
+    public EventResponse updateEventForm(EventForm eventForm) {
+        EventResponse response = new EventResponse();
+        try {
+            eventFormRepository.save(eventForm);
+            response.setMessege("Event Updated Successfully");
+            response.setStatus("SUCCESS");
+            response.setEventId(eventForm.getId());
+        } catch (Exception e) {
+            logger.error("Error in updating the status of Event Form :: Error {}", e.getMessage());
+            // Handle the exception or log the error
+            e.printStackTrace();
+            response.setMessege("Could not find Event");
+            response.setStatus("FAILURE");
+            response.setEventId(null);
+        }
+        return response;
     }
 
 

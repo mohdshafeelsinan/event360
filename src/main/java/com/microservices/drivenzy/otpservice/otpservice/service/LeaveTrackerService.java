@@ -2,6 +2,7 @@ package com.microservices.drivenzy.otpservice.otpservice.service;
 
 import com.microservices.drivenzy.otpservice.otpservice.dto.EmpDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EmployeeOnLeaveDto;
+import com.microservices.drivenzy.otpservice.otpservice.modal.Employees;
 import com.microservices.drivenzy.otpservice.otpservice.modal.LeaveTracker;
 import com.microservices.drivenzy.otpservice.otpservice.repository.LeaveTrackerRepository;
 import org.apache.poi.ss.usermodel.*;
@@ -27,6 +28,9 @@ public class LeaveTrackerService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     public List<String> findEmployeesOnLeave1(String month, String day, String year) {
         List<LeaveTracker> attendances = leaveTrackerRepository.findByMonthAndYear(month, year);
@@ -54,12 +58,41 @@ public class LeaveTrackerService {
             for (Map.Entry<String, Map<String, Integer>> entry : attendance.getEmployeeAttendance().entrySet()) {
                 EmpDto empDto = new EmpDto();
                 empDto.setName(entry.getKey());
+                List<Employees> employees =  employeeService.getEmployeeByEmail(entry.getKey()+"@bajajfinserv.in");
+                if(FormatUtils.isNullOrEmpty(employees)){
+                    empDto.setDepartment(employees.get(0).getDepartment());
+                    empDto.setEmail(employees.get(0).getEmail());
+                }
                 if (entry.getValue().get(day) == 1) {
                     employeeOnLeaveDto.getLeaveEmployees().add(empDto);
                 }else if(entry.getValue().get(day) == 2){
                     employeeOnLeaveDto.getWfhEmployees().add(empDto);
                 }else if(entry.getValue().get(day) == 3){
                     employeeOnLeaveDto.getOnSiteEmployees().add(empDto);
+                }
+            }
+        }
+        return employeeOnLeaveDto;
+    }
+
+    public EmployeeOnLeaveDto findEmployeesOnLeaveDetails(String month, String day, String year, String department) {
+        List<LeaveTracker> attendances = leaveTrackerRepository.findByMonthAndYear(month, year);
+        EmployeeOnLeaveDto employeeOnLeaveDto = new EmployeeOnLeaveDto();
+        for (LeaveTracker attendance : attendances) {
+            for (Map.Entry<String, Map<String, Integer>> entry : attendance.getEmployeeAttendance().entrySet()) {
+                EmpDto empDto = new EmpDto();
+                empDto.setName(entry.getKey());
+                List<Employees> employees =  employeeService.getEmployeeByEmail(entry.getKey()+"@bajajfinserv.in");
+                if(FormatUtils.isNullOrEmpty(employees) && employees.get(0).getDepartment().equals(department)){
+                    empDto.setDepartment(employees.get(0).getDepartment());
+                    empDto.setEmail(employees.get(0).getEmail());
+                    if (entry.getValue().get(day) == 1) {
+                        employeeOnLeaveDto.getLeaveEmployees().add(empDto);
+                    }else if(entry.getValue().get(day) == 2){
+                        employeeOnLeaveDto.getWfhEmployees().add(empDto);
+                    }else if(entry.getValue().get(day) == 3){
+                        employeeOnLeaveDto.getOnSiteEmployees().add(empDto);
+                    }
                 }
             }
         }
