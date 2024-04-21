@@ -121,6 +121,10 @@ public class LeaveTrackerService {
 
     public void importExcelFile(MultipartFile file, String month, String year) {
         logger.info("Importing Excel file");
+        List<LeaveTracker> leaveTrackers = leaveTrackerRepository.findByMonthAndYear(month, year);
+        if(!FormatUtils.isNullOrEmpty(leaveTrackers)){
+            leaveTrackerRepository.deleteAll(leaveTrackers);
+        }
         try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rows = sheet.iterator();
