@@ -78,6 +78,7 @@ public class EventFormService {
 
     public List<EventForm> getAllEvents() {
         try {
+            logger.info("Getting all the events");
             return eventFormRepository.findAll();
         } catch (Exception e) {
             // Handle the exception or log the error
