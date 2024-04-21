@@ -52,14 +52,14 @@ public class LeaveTrackerService {
 
     public EmployeeOnLeaveDto findEmployeesOnLeaveDetails(String month, String day, String year) {
         List<LeaveTracker> attendances = leaveTrackerRepository.findByMonthAndYear(month, year);
-        logger.info("Attendance data: " + attendances.toString());
+//        logger.info("Attendance data: " + attendances.toString());
         EmployeeOnLeaveDto employeeOnLeaveDto = new EmployeeOnLeaveDto();
         for (LeaveTracker attendance : attendances) {
             for (Map.Entry<String, Map<String, Integer>> entry : attendance.getEmployeeAttendance().entrySet()) {
                 EmpDto empDto = new EmpDto();
                 empDto.setName(entry.getKey());
                 List<Employees> employees =  employeeService.getEmployeeByEmail(entry.getKey()+"@bajajfinserv.in");
-                if(FormatUtils.isNullOrEmpty(employees)){
+                if(!FormatUtils.isNullOrEmpty(employees)){
                     empDto.setDepartment(employees.get(0).getDepartment());
                     empDto.setEmail(employees.get(0).getEmail());
                 }
@@ -72,18 +72,20 @@ public class LeaveTrackerService {
                 }
             }
         }
+        logger.info("Employee on leave data: " + employeeOnLeaveDto.toString());
         return employeeOnLeaveDto;
     }
 
     public EmployeeOnLeaveDto findEmployeesOnLeaveDetails(String month, String day, String year, String department) {
         List<LeaveTracker> attendances = leaveTrackerRepository.findByMonthAndYear(month, year);
+//        logger.info("Attendance data: " + attendances.toString());
         EmployeeOnLeaveDto employeeOnLeaveDto = new EmployeeOnLeaveDto();
         for (LeaveTracker attendance : attendances) {
             for (Map.Entry<String, Map<String, Integer>> entry : attendance.getEmployeeAttendance().entrySet()) {
                 EmpDto empDto = new EmpDto();
                 empDto.setName(entry.getKey());
                 List<Employees> employees =  employeeService.getEmployeeByEmail(entry.getKey()+"@bajajfinserv.in");
-                if(FormatUtils.isNullOrEmpty(employees) && employees.get(0).getDepartment().equals(department)){
+                if(!FormatUtils.isNullOrEmpty(employees) && employees.get(0).getDepartment().equals(department)){
                     empDto.setDepartment(employees.get(0).getDepartment());
                     empDto.setEmail(employees.get(0).getEmail());
                     if (entry.getValue().get(day) == 1) {
