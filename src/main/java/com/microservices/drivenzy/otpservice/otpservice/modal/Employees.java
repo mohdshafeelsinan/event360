@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+import java.util.Map;
+
 @Data
 @Document("employees")
 public class Employees {
@@ -23,4 +26,7 @@ public class Employees {
     private String address;
     private String mobileno;
     private String userId;
+    private List<EmployeeExperience> employeeExperience;
+    private Map<String,Double> skillVsRating;
+
 }
