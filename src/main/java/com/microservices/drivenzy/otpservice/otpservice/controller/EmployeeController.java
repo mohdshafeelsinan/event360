@@ -1,5 +1,6 @@
 package com.microservices.drivenzy.otpservice.otpservice.controller;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EmployeeResponse;
+import com.microservices.drivenzy.otpservice.otpservice.modal.EmployeeExperience;
 import com.microservices.drivenzy.otpservice.otpservice.modal.Employees;
 import com.microservices.drivenzy.otpservice.otpservice.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,21 @@ public class EmployeeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
+  
+    @PostMapping("/getSpecialist")
+    public ResponseEntity<List<Employees>> getSpecialist(@RequestBody Employees employees){
+        EmployeeExperience employeeExperience = employees.getEmployeeExperience().get(0);
+        List<Employees> employeesList = employeeService.getSpecialistEmp(employeeExperience.getDomain(),employeeExperience.getYearsOfExp());
+        try {
+            if (employeesList.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }else {
+                return ResponseEntity.ok(employeesList);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Employees> getEmployeeById(@PathVariable String id) {
         try {
