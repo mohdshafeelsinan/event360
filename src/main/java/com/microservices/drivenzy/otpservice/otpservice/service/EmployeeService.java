@@ -101,12 +101,12 @@ public class EmployeeService {
 
         try {
             List<Employees> employeesList = getAllEmployees();
-            logger.info("Employee List :: {}",employeesList);
+            //logger.info("Employee List :: {}",employeesList);
             for (Employees emp : employeesList){
                 LocalDate birthDate = LocalDate.parse(emp.getDob(), formatter);
 
                 LocalDate today = LocalDate.now();
-                logger.info("birthDate :: {} today :: {} Condition ::{}/{} :: {}/{}",birthDate,today,birthDate.getDayOfMonth(),today.getDayOfMonth(),birthDate.getMonth(),today.getMonth());
+                //logger.info("birthDate :: {} today :: {} Condition ::{}/{} :: {}/{}",birthDate,today,birthDate.getDayOfMonth(),today.getDayOfMonth(),birthDate.getMonth(),today.getMonth());
 
                 if (birthDate.getDayOfMonth() == today.getDayOfMonth() && birthDate.getMonth() == today.getMonth())
                     response.add(emp);
