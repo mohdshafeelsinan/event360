@@ -10,5 +10,7 @@ public class EmployeeOnLeaveDto {
     private List<EmpDto> LeaveEmployees = new ArrayList<>();
     private List<EmpDto> WfhEmployees = new ArrayList<>();
     private List<EmpDto> OnSiteEmployees = new ArrayList<>();
-
+    private int leaveCount;
+    private int wfhCount;
+    private int onSiteCount;
 }

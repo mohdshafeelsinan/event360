@@ -50,6 +50,35 @@ public class LeaveTrackerService {
         return employeesOnLeave;
     }
 
+    public EmployeeOnLeaveDto findEmployeesOnLeaveDetailsCount(String month, String day, String year) {
+        List<LeaveTracker> attendances = leaveTrackerRepository.findByMonthAndYear(month, year);
+        EmployeeOnLeaveDto employeeOnLeaveDto = new EmployeeOnLeaveDto();
+        int leaveCount = 0;
+        int wfhCount = 0;
+        int onSiteCount = 0;
+
+        for (LeaveTracker attendance : attendances) {
+            for (Map.Entry<String, Map<String, Integer>> entry : attendance.getEmployeeAttendance().entrySet()) {
+                Employees employees = employeeService.getEmployeeByEmpId(entry.getKey());
+                if(!FormatUtils.isNullOrEmpty(employees)){
+                    if (entry.getValue().get(day) == 1) {
+                        leaveCount++;
+                    }else if(entry.getValue().get(day) == 2){
+                        wfhCount++;
+                    }else if(entry.getValue().get(day) == 3){
+                        onSiteCount++;
+                    }
+                }
+            }
+        }
+
+        employeeOnLeaveDto.setLeaveCount(leaveCount);
+        employeeOnLeaveDto.setWfhCount(wfhCount);
+        employeeOnLeaveDto.setOnSiteCount(onSiteCount);
+
+        return employeeOnLeaveDto;
+    }
+
     public EmployeeOnLeaveDto findEmployeesOnLeaveDetails(String month, String day, String year) {
         List<LeaveTracker> attendances = leaveTrackerRepository.findByMonthAndYear(month, year);
 //        logger.info("Attendance data: " + attendances.toString());
