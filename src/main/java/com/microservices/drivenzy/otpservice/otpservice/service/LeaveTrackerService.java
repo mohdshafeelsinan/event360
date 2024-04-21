@@ -1,5 +1,6 @@
 package com.microservices.drivenzy.otpservice.otpservice.service;
 
+import com.microservices.drivenzy.otpservice.otpservice.dto.DepartmentLeaveDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EmpDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EmployeeOnLeaveDto;
 import com.microservices.drivenzy.otpservice.otpservice.modal.Employees;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -50,6 +53,21 @@ public class LeaveTrackerService {
         return employeesOnLeave;
     }
 
+//    public static void main(String[] args) {
+//        LeaveTrackerService leaveTrackerService = new LeaveTrackerService();
+//        leaveTrackerService.findCountOfLeave(LocalDate.now());
+//    }
+
+    public List<DepartmentLeaveDto> findCountOfLeave(LocalDate date)
+    {
+        String month = date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+        String day = String.valueOf(date.getDayOfMonth());
+        String year = String.valueOf(date.getYear());
+        System.out.println("Month: "+month+" Day: "+day+" Year: "+year);
+        List<DepartmentLeaveDto> employeeOnLeaveDto = findEmployeesOnLeaveDetailsCountByDepartment(month, day, year);
+        return employeeOnLeaveDto;
+    }
+
     public EmployeeOnLeaveDto findEmployeesOnLeaveDetailsCount(String month, String day, String year) {
         List<LeaveTracker> attendances = leaveTrackerRepository.findByMonthAndYear(month, year);
         EmployeeOnLeaveDto employeeOnLeaveDto = new EmployeeOnLeaveDto();
@@ -77,6 +95,33 @@ public class LeaveTrackerService {
         employeeOnLeaveDto.setOnSiteCount(onSiteCount);
 
         return employeeOnLeaveDto;
+    }
+
+    public List<DepartmentLeaveDto> findEmployeesOnLeaveDetailsCountByDepartment(String month, String day, String year) {
+        List<LeaveTracker> attendances = leaveTrackerRepository.findByMonthAndYear(month, year);
+        Map<String, DepartmentLeaveDto> departmentLeaveMap = new HashMap<>();
+
+        for (LeaveTracker attendance : attendances) {
+            for (Map.Entry<String, Map<String, Integer>> entry : attendance.getEmployeeAttendance().entrySet()) {
+                Employees employees = employeeService.getEmployeeByEmpId(entry.getKey());
+                if(!FormatUtils.isNullOrEmpty(employees)){
+                    DepartmentLeaveDto departmentLeaveDto = departmentLeaveMap.getOrDefault(employees.getDepartment(), new DepartmentLeaveDto());
+                    departmentLeaveDto.setDepartment(employees.getDepartment());
+
+                    if (entry.getValue().get(day) == 1) {
+                        departmentLeaveDto.setLeaveCount(departmentLeaveDto.getLeaveCount() + 1);
+                    }else if(entry.getValue().get(day) == 2){
+                        departmentLeaveDto.setWfhCount(departmentLeaveDto.getWfhCount() + 1);
+                    }else if(entry.getValue().get(day) == 3){
+                        departmentLeaveDto.setOnSiteCount(departmentLeaveDto.getOnSiteCount() + 1);
+                    }
+
+                    departmentLeaveMap.put(employees.getDepartment(), departmentLeaveDto);
+                }
+            }
+        }
+
+        return new ArrayList<>(departmentLeaveMap.values());
     }
 
     public EmployeeOnLeaveDto findEmployeesOnLeaveDetails(String month, String day, String year) {
