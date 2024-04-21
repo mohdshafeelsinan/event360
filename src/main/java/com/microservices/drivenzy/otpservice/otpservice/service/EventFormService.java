@@ -43,7 +43,7 @@ public class EventFormService {
             eventForm.setEventId("BFL-EVT"+eventForm.getId());
             eventForm.setEventInvitationQRCode(FormatUtils.generateQrCode("www.google.com"+"/"+eventForm.getEventName()));
             eventForm.setEventQRCode(FormatUtils.generateQrCode("www.google.com"+"/"+eventForm.getEventName()));
-            eventForm.setEventAttendanceQRCode(FormatUtils.generateQrCode("www.google.com"+"/"+eventForm.getEventName()));
+            eventForm.setEventAttendanceQRCode(FormatUtils.generateQrCode("http://192.168.1.7:4200/event/eventAttendance/"+eventForm.getEventId()));
             eventForm = eventFormRepository.save(eventForm);
             response.setMessege("Event Saved Successfully");
             response.setStatus("SUCCESS");
@@ -78,6 +78,7 @@ public class EventFormService {
 
     public List<EventForm> getAllEvents() {
         try {
+            logger.info("Getting all the events");
             return eventFormRepository.findAll();
         } catch (Exception e) {
             // Handle the exception or log the error

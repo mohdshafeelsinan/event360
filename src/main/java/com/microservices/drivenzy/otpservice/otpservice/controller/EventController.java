@@ -34,9 +34,9 @@ public class EventController {
         EventResponse response = new EventResponse();
         try {
             if(eventForm.getEventId() == null || eventForm.getEventId().isEmpty()) {
-                response = eventFormService.updateEventForm(eventForm);
-            }else{
                 response = eventFormService.saveEventForm(eventForm);
+            }else{
+                response = eventFormService.updateEventForm(eventForm);
             }
 
         } catch (Exception e) {
