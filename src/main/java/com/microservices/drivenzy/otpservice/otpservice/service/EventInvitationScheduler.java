@@ -77,7 +77,7 @@ public class EventInvitationScheduler {
                 }
             }
         }catch (Exception e){
-            logger.error("Error in fetching Event Happening Today and updating the status :: Error {}", e.getMessage());
+            logger.error("Error in fetching Event event Happening Today and updating the status :: Error {}", e.getMessage());
         }
 
 
