@@ -21,4 +21,5 @@ public class Complaints {
     private String status;
     private Boolean isAnonymous;
     private String category;
+
 }
