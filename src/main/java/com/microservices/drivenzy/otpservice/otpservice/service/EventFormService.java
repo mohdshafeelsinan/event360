@@ -44,6 +44,7 @@ public class EventFormService {
             eventForm.setEventInvitationQRCode(FormatUtils.generateQrCode("www.google.com"+"/"+eventForm.getEventName()));
             eventForm.setEventQRCode(FormatUtils.generateQrCode("www.google.com"+"/"+eventForm.getEventName()));
             eventForm.setEventAttendanceQRCode(FormatUtils.generateQrCode("http://192.168.1.7:4200/event/eventAttendance/"+eventForm.getEventId()));
+            eventForm.setRemainingBudget(calculateRemainingBudget(eventForm));
             eventForm = eventFormRepository.save(eventForm);
             response.setMessege("Event Saved Successfully");
             response.setStatus("SUCCESS");
@@ -60,6 +61,7 @@ public class EventFormService {
     public EventResponse updateEventForm(EventForm eventForm) {
         EventResponse response = new EventResponse();
         try {
+            eventForm.setRemainingBudget(calculateRemainingBudget(eventForm));
             eventFormRepository.save(eventForm);
             response.setMessege("Event Updated Successfully");
             response.setStatus("SUCCESS");
@@ -118,6 +120,15 @@ public class EventFormService {
             e.printStackTrace();
             return new ArrayList<>(); // Return an empty list in case of an error
         }
+    }
+
+    public Double calculateRemainingBudget(EventForm event) {
+        if(FormatUtils.isNullOrEmpty(event.getExpenses())) {
+            return 0.0;
+        }
+        double totalExpenses = event.getExpenses().values().stream().mapToDouble(Double::doubleValue).sum();
+        Double remainingBudget = event.getBudget() - totalExpenses;
+        return remainingBudget;
     }
 
     public EventForm updateEventForm(EventRequestDto eventRequestDto) {
