@@ -5,6 +5,7 @@ import com.microservices.drivenzy.otpservice.otpservice.modal.EmployeeExperience
 import com.microservices.drivenzy.otpservice.otpservice.modal.Employees;
 import com.microservices.drivenzy.otpservice.otpservice.repository.EmployeeRepository;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,6 +16,9 @@ import java.util.List;
 @Service
 public class EmployeeService {
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private SequenceGeneratorService sequenceGeneratorService;
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(LeaveTrackerController.class);
 
@@ -34,6 +38,12 @@ public class EmployeeService {
 
     public Employees saveEmployee(Employees employee) {
         try {
+            Employees tempEmp = employeeRepository.findByEmail(employee.getEmail()).get(0);
+            if(!FormatUtils.isNullOrEmpty(tempEmp)){
+                employee.setId(tempEmp.getId());
+            }else{
+                employee.setEmpid("EMP-" + sequenceGeneratorService.getNextSequence(Employees.SEQUENCE_NAME));
+            }
             return employeeRepository.save(employee);
         } catch (Exception e) {
             // Handle the exception here
