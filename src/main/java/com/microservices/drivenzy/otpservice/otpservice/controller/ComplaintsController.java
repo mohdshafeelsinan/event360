@@ -1,5 +1,6 @@
 package com.microservices.drivenzy.otpservice.otpservice.controller;
 
+import com.microservices.drivenzy.otpservice.otpservice.dto.CasesDto;
 import com.microservices.drivenzy.otpservice.otpservice.modal.CommonResponse;
 import com.microservices.drivenzy.otpservice.otpservice.modal.Complaints;
 import com.microservices.drivenzy.otpservice.otpservice.service.ComplaintsService;
@@ -28,6 +29,15 @@ public class ComplaintsController {
             return new CommonResponse("Complaint filed successfully","Success",complaintsService.saveComplaints(complaints));
         }catch (Exception e){
             return new CommonResponse("Failed to register your complaint","Failed",null);
+        }
+    }
+
+    @PostMapping("convertToCase")
+    public CommonResponse updateToCase(@RequestBody CasesDto casesDto){
+        try {
+            return new CommonResponse("Complaint updated to case successfully.","Success",complaintsService.createCase(casesDto));
+        }catch (Exception e){
+            return new CommonResponse("Failed to update complaint to case.","Failed",null);
         }
     }
 }
