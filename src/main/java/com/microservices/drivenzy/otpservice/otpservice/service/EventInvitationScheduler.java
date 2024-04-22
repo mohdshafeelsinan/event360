@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,9 +31,15 @@ public class EventInvitationScheduler {
     @Autowired
     EventFormService eventFormService;
 
+    @Autowired
+    FoodOrderService foodOrderService;
+
+    @Autowired
+    MailService mailService;
+
     private ExecutorService executor = Executors.newFixedThreadPool(10);
 
-    @Scheduled(initialDelay = 0, fixedRate = 300000)
+//    @Scheduled(initialDelay = 0, fixedRate = 300000)
     public void fetchEventInvitationEmployeeAndUpdate() {
         try{
             logger.info("Fetching Event Invitation Employee and updating the status");
@@ -82,7 +91,7 @@ public class EventInvitationScheduler {
         }
     }
 
-    @Scheduled(initialDelay = 0, fixedRate = 300000)
+//    @Scheduled(initialDelay = 0, fixedRate = 300000)
     public void fetchEventHappeningTodayAndUpdateEmployeePresentStatus() {
         try{
             logger.info("Fetching Event Happening Today and updating the status");
@@ -108,5 +117,29 @@ public class EventInvitationScheduler {
 
 
     }
+
+//    @Scheduled(initialDelay = 0, fixedRate = 300000)
+    public void fetchFoodOrderDetailAndSendMailtoVendor()
+    {
+        try{
+            logger.info("Fetching Food Order Detail and Sending Mail to Vendor");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String formattedDate = LocalDate.now().format(formatter);
+            Map<String, Double> vendorOrderDetails = foodOrderService.getVendorOrderDetails(formattedDate);
+            if(!FormatUtils.isNullOrEmpty(vendorOrderDetails))
+            {
+                StringBuilder mailBody = new StringBuilder("Food Order Details for the day are as follows :: \n");
+                for(Map.Entry<String, Double> entry : vendorOrderDetails.entrySet())
+                {
+                    mailBody.append(entry.getKey()).append(" :: ").append(entry.getValue()).append("\n");
+                }
+                mailService.sendEmail("mohammed.sinan@bajajfinserv.in", "Food Order Details for Date "+formattedDate, mailBody.toString());
+            }
+
+        }catch (Exception e){
+            logger.error("Error in fetching Food Order Detail and Sending Mail to Vendor :: Error {}", e.getMessage());
+        }
+    }
+
 
 }
