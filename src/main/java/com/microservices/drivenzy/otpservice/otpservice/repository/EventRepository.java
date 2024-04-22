@@ -19,4 +19,6 @@ public interface EventRepository extends MongoRepository<EventForm, String> {
     List<EventForm> findByEventFromDate(String todayDate);
     @Query("{ 'eventFromDate': { $gt: ?0, $lt: ?1 } }")
     List<EventForm> findByEventFromDateBetween(String startDate, String endDate);
+
+    List<EventForm> findByStatus(String status);
 }

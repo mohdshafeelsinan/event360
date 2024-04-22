@@ -53,11 +53,6 @@ public class LeaveTrackerService {
         return employeesOnLeave;
     }
 
-//    public static void main(String[] args) {
-//        LeaveTrackerService leaveTrackerService = new LeaveTrackerService();
-//        leaveTrackerService.findCountOfLeave(LocalDate.now());
-//    }
-
     public List<DepartmentLeaveDto> findCountOfLeave(LocalDate date)
     {
         String month = date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);

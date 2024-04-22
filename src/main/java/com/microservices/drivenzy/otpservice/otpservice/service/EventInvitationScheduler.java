@@ -57,6 +57,31 @@ public class EventInvitationScheduler {
 
     }
 
+//    @Scheduled(initialDelay = 0, fixedRate = 300000)
+    public void fetchEventAttendeesAndAttendanceListAndSendMail(){
+        try{
+            logger.info("Fetching Event Attendees and Attendance List and Sending Mail");
+            List<EventForm> eventForms = eventFormService.getEventsByStatus("COMPLETED");
+            logger.info("EventForms :: {}", eventForms);
+            if(!FormatUtils.isNullOrEmpty(eventForms))
+            {
+                for(EventForm eventForm : eventForms)
+                {
+                    executor.execute(() -> {
+                        try {
+                            eventFormService.sendMailToEventAttendees(eventForm);
+                        } catch (Exception e) {
+                            logger.error("Error in fetching Event Attendees and Attendance List and Sending Mail :: Error {}", e.getMessage());
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+            }
+        }catch (Exception e){
+            logger.error("Error in fetching Event Attendees and Attendance List and Sending Mail :: Error {}", e.getMessage());
+        }
+    }
+
     @Scheduled(initialDelay = 0, fixedRate = 300000)
     public void fetchEventHappeningTodayAndUpdateEmployeePresentStatus() {
         try{

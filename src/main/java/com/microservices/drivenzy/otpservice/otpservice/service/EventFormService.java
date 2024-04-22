@@ -169,6 +169,16 @@ public class EventFormService {
         }
     }
 
+    public  List<EventForm> getEventsByStatus(String status) {
+        try {
+            return eventFormRepository.findByStatus(status);
+        } catch (Exception e) {
+            // Handle the exception or log the error
+            e.printStackTrace();
+            return new ArrayList<>(); // Return an empty list in case of an error
+        }
+    }
+
     public List<EventForm> getEventsTodayNewQuery() {
         String fromDate = LocalDate.now().toString();
         String toDate = LocalDate.now().plusDays(1).toString();
@@ -218,5 +228,19 @@ public class EventFormService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void sendMailToEventAttendees(EventForm eventForm) {
+        List<AttendeesDto> attendees = eventForm.getAttendees();
+        List<AttendeesDto> attendance = eventForm.getAttendance();
+
+        // compare the attendees and attendance list the employee not in attendance list send mail
+        attendees.forEach(attendeesDto -> {
+            if(attendance.stream().noneMatch(attendeesDto1 -> attendeesDto1.getEmployee().getEmail().equals(attendeesDto.getEmployee().getEmail()))){
+                logger.info("Sending mail to employee :: {}",attendeesDto.getEmployee().getEmail());
+                sendMail(attendeesDto.getEmployee().getEmail(), "Event Feedback", "Please Complete your feedback .You have not marked your attendance for the event "+eventForm.getEventName());
+            }
+        });
+
     }
 }
