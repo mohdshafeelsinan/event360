@@ -38,9 +38,9 @@ public class EmployeeService {
 
     public Employees saveEmployee(Employees employee) {
         try {
-            Employees tempEmp = employeeRepository.findByEmail(employee.getEmail()).get(0);
+            List<Employees> tempEmp = employeeRepository.findByEmail(employee.getEmail());
             if(!FormatUtils.isNullOrEmpty(tempEmp)){
-                employee.setId(tempEmp.getId());
+                employee.setId(tempEmp.get(0).getId());
             }else{
                 employee.setEmpid("EMP-" + sequenceGeneratorService.getNextSequence(Employees.SEQUENCE_NAME));
             }
