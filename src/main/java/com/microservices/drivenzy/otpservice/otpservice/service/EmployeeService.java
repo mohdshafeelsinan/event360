@@ -107,7 +107,7 @@ public class EmployeeService {
     public List<Employees> getEmployeesOfDob(){
         List<Employees> response = new ArrayList<>();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         try {
             List<Employees> employeesList = getAllEmployees();
