@@ -9,7 +9,9 @@ import com.microservices.drivenzy.otpservice.otpservice.dto.EventRequestDto;
 import com.microservices.drivenzy.otpservice.otpservice.dto.EventResponse;
 import com.microservices.drivenzy.otpservice.otpservice.modal.Employees;
 import com.microservices.drivenzy.otpservice.otpservice.service.EventFormService;
+import com.microservices.drivenzy.otpservice.otpservice.service.FormatUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +31,15 @@ public class EventController {
     @Autowired
     private EventFormService eventFormService;
 
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(EventFormService.class);
+
+
     @PostMapping("/event")
     public ResponseEntity<EventResponse> saveEventForm(@RequestBody EventForm eventForm) {
         EventResponse response = new EventResponse();
         try {
-            if(eventForm.getEventId() == null || eventForm.getEventId().isEmpty()) {
+            logger.info("Event {}",eventForm.toString());
+            if(FormatUtils.isNullOrEmpty(eventForm.getEventId())) {
                 response = eventFormService.saveEventForm(eventForm);
             }else{
                 response = eventFormService.updateEventForm(eventForm);

@@ -62,7 +62,7 @@ public class EventFormService {
         EventResponse response = new EventResponse();
         try {
             EventForm event = eventFormRepository.findByEventId(eventForm.getEventId());
-            event.setId(event.getId());
+            eventForm.setId(event.getId());
             eventForm.setRemainingBudget(calculateRemainingBudget(eventForm));
             eventFormRepository.save(eventForm);
             response.setMessege("Event Updated Successfully");
