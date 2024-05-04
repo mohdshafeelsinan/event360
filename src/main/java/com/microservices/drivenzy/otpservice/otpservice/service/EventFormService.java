@@ -103,6 +103,7 @@ public class EventFormService {
 
     public EventForm getEventByName(String eventName) {
         try {
+            logger.info("Event name:",eventFormRepository.findByEventName(eventName));
             return eventFormRepository.findByEventName(eventName);
         } catch (Exception e) {
             // Handle the exception or log the error
