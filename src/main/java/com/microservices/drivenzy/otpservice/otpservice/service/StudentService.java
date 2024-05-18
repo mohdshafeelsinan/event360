@@ -18,9 +18,9 @@ public class StudentService {
     public Student saveStudents(Student student){
         try {
             Student saved = studentRepository.save(student);
-            String subject = "Successfully registered in Plan B Studio Fitness";
+            /*String subject = "Successfully registered in Plan B Studio Fitness";
             String body = "Hi "+student.getFirstName()+". Thanks for choosing Plan B fitness. Your student ID : "+student.getStudentId();
-            mailService.sendEmail(student.getEmail(),subject,body);
+            mailService.sendEmail(student.getEmail(),subject,body);*/
             return saved;
         }catch (Exception e){
             e.printStackTrace();

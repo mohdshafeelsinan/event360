@@ -16,13 +16,6 @@ public class Student {
     private String emiritesOrPassportNo;
     private String healthIssue;
     private String dob;
-    private String paymentMode;
-    private String paymentDate;
-    private String category;
-    private String doj;
-    private String validityDate;
-    private Long classCompleted;
-    private Long classRemaining;
     private String gender;
     private String image;
     private String address;
