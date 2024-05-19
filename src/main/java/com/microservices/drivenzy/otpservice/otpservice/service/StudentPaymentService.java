@@ -31,4 +31,13 @@ public class StudentPaymentService {
             return null;
         }
     }
+
+    public StudentPayment getPaymentById(String id){
+        try {
+            return studentPaymentRepository.findByStudentId(id);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

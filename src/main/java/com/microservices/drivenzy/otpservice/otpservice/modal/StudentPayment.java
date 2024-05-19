@@ -14,4 +14,5 @@ public class StudentPayment {
     private Long classCompleted;
     private Long classRemaining;
     private String studentId;
+    private Long vat;
 }

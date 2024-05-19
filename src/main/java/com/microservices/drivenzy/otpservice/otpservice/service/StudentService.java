@@ -13,14 +13,15 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
     private MailService mailService;
 
     public Student saveStudents(Student student){
         try {
             Student saved = studentRepository.save(student);
-            /*String subject = "Successfully registered in Plan B Studio Fitness";
+            String subject = "Successfully registered in Plan B Studio Fitness";
             String body = "Hi "+student.getFirstName()+". Thanks for choosing Plan B fitness. Your student ID : "+student.getStudentId();
-            mailService.sendEmail(student.getEmail(),subject,body);*/
+            mailService.sendEmail(student.getEmail(),subject,body);
             return saved;
         }catch (Exception e){
             e.printStackTrace();
@@ -33,6 +34,15 @@ public class StudentService {
         try {
             return studentRepository.findAll();
         } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Student getStudentById(String studentId){
+        try {
+            return studentRepository.findByStudentId(studentId);
+        }catch (Exception e){
             e.printStackTrace();
             return null;
         }

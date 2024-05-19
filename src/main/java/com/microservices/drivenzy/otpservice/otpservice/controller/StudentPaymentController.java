@@ -33,4 +33,13 @@ public class StudentPaymentController {
             return new CommonResponse("Failed to fetch Payment details","Failed",null);
         }
     }
+
+    @GetMapping("/getPayment/{id}")
+    public CommonResponse getPaymentById(@PathVariable String id){
+        try {
+            return new CommonResponse("Payment details fetched successfully","Success",studentPaymentService.getPaymentById(id));
+        }catch (Exception e){
+            return new CommonResponse("Failed to fetch Payment details","Failed",null);
+        }
+    }
 }
