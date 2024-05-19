@@ -9,9 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableMongoRepositories
 @EnableScheduling
 public class OtpserviceApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(OtpserviceApplication.class, args);
 	}
-
 }

@@ -26,7 +26,7 @@ public class StudentController {
         }
     }
 
-    @PostMapping("/getStudent")
+    @GetMapping("/getStudent")
     public CommonResponse getAllStudents(){
         try {
             return new CommonResponse("Student details fetched successfully","Success",studentService.getStudent());
@@ -34,4 +34,5 @@ public class StudentController {
             return new CommonResponse("Failed to fetch student details","Failed",null);
         }
     }
+
 }

@@ -13,4 +13,5 @@ public class StudentPayment {
     private String validityDate;
     private Long classCompleted;
     private Long classRemaining;
+    private String studentId;
 }
