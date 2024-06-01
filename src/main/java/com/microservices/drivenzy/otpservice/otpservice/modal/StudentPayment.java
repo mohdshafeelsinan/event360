@@ -8,11 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class StudentPayment {
     private String paymentMode;
     private String paymentDate;
-    private String category;
+    private String course;
     private String doj;
     private String validityDate;
-    private Long classCompleted;
-    private Long classRemaining;
+    private String remarks;
     private String studentId;
-    private Long vat;
+    private String studentName;
+    private Long fee;
 }

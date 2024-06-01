@@ -42,10 +42,19 @@ public class StudentController {
     @GetMapping("/getStudent/{id}")
     public CommonResponse getStudentById(@PathVariable String id){
         try {
-            //logger.info("StrudentId "+ id);
+            logger.info("StrudentId "+ id);
             return new CommonResponse("Student details fetched successfully","Success",studentService.getStudentById(id));
         }catch (Exception e){
             return new CommonResponse("Failed to fetch student details","Failed",null);
+        }
+    }
+
+    @GetMapping("/deleteStudent/{id}")
+    public CommonResponse deleteStudentById(@PathVariable String id){
+        try {
+            return new CommonResponse("Student details Deleted successfully","Success",studentService.deleteStudent(id));
+        }catch (Exception e){
+            return new CommonResponse("Failed to delete student details","Failed",null);
         }
     }
 

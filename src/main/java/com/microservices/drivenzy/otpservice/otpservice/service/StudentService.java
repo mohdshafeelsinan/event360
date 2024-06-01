@@ -47,4 +47,19 @@ public class StudentService {
             return null;
         }
     }
+
+    public Student deleteStudent(String studentId){
+        try {
+            Student studentToDelete = getStudentById(studentId);
+            if (studentToDelete!= null) {
+                studentRepository.delete(studentToDelete);
+                return studentToDelete; // Indicate successful deletion
+            } else {
+                return null; // Indicate that the student was not found
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // Indicate an error occurred
+        }
+    }
 }
