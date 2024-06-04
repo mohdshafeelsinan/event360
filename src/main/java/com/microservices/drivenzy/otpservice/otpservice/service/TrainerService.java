@@ -1,30 +1,31 @@
 package com.microservices.drivenzy.otpservice.otpservice.service;
-
 import com.microservices.drivenzy.otpservice.otpservice.modal.Student;
+import com.microservices.drivenzy.otpservice.otpservice.modal.Trainer;
 import com.microservices.drivenzy.otpservice.otpservice.repository.StudentRepository;
+import com.microservices.drivenzy.otpservice.otpservice.repository.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class StudentService {
+public class TrainerService {
 
     @Autowired
-    private StudentRepository studentRepository;
+    private TrainerRepository trainerRepository;
 
     @Autowired
     private MailService mailService;
 
-    public Student saveStudents(Student student){
+    public Trainer saveTrainers(Trainer trainer){
         try {
-            Student saved = studentRepository.save(student);
+            Trainer saved = trainerRepository.save(trainer);
             String subject = "Successfully registered in Plan B Studio Fitness";
-            String body = "Hi "+student.getFirstName()+". Thanks for choosing Plan B fitness." + "\n" + "Your student ID : "+student.getStudentId()+".Thank you for choosing us!\n" +
+            String body = "Hi "+trainer.getFirstName()+". Thanks for choosing Plan B fitness." + "\n" + "Your student ID : "+trainer.getTrainerId()+".Thank you for choosing us!\n" +
                     "\n" +
                     "Plan B Squad welcomes you for a fitter, fun-filled environment. \n" +
                     "We are excited to have you join our community, where we offer a one-stop destination for Dance, Fitness & Beyond.\n" + "\n" + "" +
-                    "Student Course: "+student.getCouresEnrolled()+ "\n" + "Trainer Name: "+student.getTrainer()+ "\n" +
+                    "Student Course: "+trainer.getCouresEnrolled()+ "\n" + "Trainer Name: "+getTrainerById(trainer.getFirstName())+ "\n" +
                     "Feel free to reach out to us at any time if you have questions or need assistance." +
                     "\n" +
                     "Plan B Squad Energy Center\n" +
@@ -32,7 +33,7 @@ public class StudentService {
                     "+971 56 787 1125\n" +
                     "\n" +
                     "For more information, visit: https://linktr.ee/planbsquad\n";
-            mailService.sendEmail(student.getEmail(),subject,body);
+            mailService.sendEmail(trainer.getEmail(),subject,body);
             return saved;
         }catch (Exception e){
             e.printStackTrace();
@@ -40,37 +41,21 @@ public class StudentService {
         }
     }
 
-
-    public List<Student> getStudent(){
+    public List<Trainer> getTrainer(){
         try {
-            return studentRepository.findAll();
+            return trainerRepository.findAll();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public Student getStudentById(String studentId){
+    public Trainer getTrainerById(String trainerId){
         try {
-            return studentRepository.findByStudentId(studentId);
+            return trainerRepository.findByTrainerId(trainerId);
         }catch (Exception e){
             e.printStackTrace();
             return null;
-        }
-    }
-
-    public Student deleteStudent(String studentId){
-        try {
-            Student studentToDelete = getStudentById(studentId);
-            if (studentToDelete!= null) {
-                studentRepository.delete(studentToDelete);
-                return studentToDelete; // Indicate successful deletion
-            } else {
-                return null; // Indicate that the student was not found
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null; // Indicate an error occurred
         }
     }
 }
